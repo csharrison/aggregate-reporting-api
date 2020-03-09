@@ -38,15 +38,15 @@ Example: Reporting total ad views for a campaign
 **On every impression related to campaign-123:**
 
 ```
-// Add an entry to the storage with id “campaign-123” if it doesn’t
+// Add an entry to the storage with id 'campaign-123' if it doesn’t
 // already exist.
 
-var entryHandle = window.writeOnlyReport.get(‘campaign-123’);
+const entryHandle = window.writeOnlyReport.get('campaign-123');
 
 // Each entry supports simple string kv pairs. If the attribute is
 // already present, it will be overridden. This can be used e.g.
 // for demographic slices.
-entryHandle.set(“country”, “usa”);
+entryHandle.set('country', 'usa');
 
 // Entry attributes support appends. If the attribute does not exist, is
 // equivalent to |set|. This allows us to count in unary.
@@ -71,9 +71,9 @@ This snippet will end up sending the following report, assuming the
 aggregation service has seen > T identical reports:
 ```
 {
- ‘entryName’: ‘campaign-123’,
- ‘country’: ‘usa’,
- ‘visits’: ‘1’
+ 'entryName': 'campaign-123',
+ 'country': 'usa',
+ 'visits': '1'
 }
 ```
 Using this data on the server side, ad tech can find distributions of ad
@@ -88,15 +88,15 @@ aggregated reports off of a campaign id.
 
 **On every impression related to campaign-123:**
 ```
-var entryHandle = window.writeOnlyReport.get(‘campaign-123’);
+const entryHandle = window.writeOnlyReport.get('campaign-123');
 
 // Add any demographic slices you want or know in the current
 // context.
-entryHandle.set(‘country’, ‘usa’);
+entryHandle.set('country', 'usa');
 
 // Add a date field, so there’s no confusion with regard to
 // reporting delays.
-entryHandle.set(‘date’, new Date().toDateString());
+entryHandle.set('date', new Date().toDateString());
 
 // Every night, queue a report per user that saw the campaign at
 // least once, with their demographic information, as long as
@@ -111,10 +111,10 @@ Example: Number of different domains a 3p widget is encountered on, per user
 
 **On every impression related to widget-123:**
 ```
-var entryHandle = window.writeOnlyReport.get(‘widget-123’);
+const entryHandle = window.writeOnlyReport.get('widget-123');
 
 // Filter out repeat views on this domain using first party state.
-if (!haveSeenWidgetOnThisDomainSinceLastReport('widget-123’)) {
+if (!haveSeenWidgetOnThisDomainSinceLastReport('widget-123')) {
   entryHandle.append('distinct-domains', '1');
 }
 
@@ -127,12 +127,12 @@ Some browsers may limit read/write access to storage inside cross-domain
 iframes, making the filtering from the previous solution unavailable.
 Here is another technique.
 ```
-var entryHandle = window.writeOnlyReport.get(‘widget-123-domains’);
+const entryHandle = window.writeOnlyReport.get('widget-123-domains');
 
 // Record this domain
 
 entryHandle.add('viewed-on-' + document.location.ancestorOrigins[0],
-                “1”);
+                '1');
 
 entryHandle.reportAfter(2 * kMsecPerDay);
 ```
@@ -170,19 +170,19 @@ denominator of that fraction, for every domain where (enough) users see
 the ad campaigns:
 
 ```
-var thisDomain = document.location.ancestorOrigins[0];
+const thisDomain = document.location.ancestorOrigins[0];
 
-var thisDomainMod = someHash(thisDomain) % 100;
+const thisDomainMod = someHash(thisDomain) % 100;
 
 for (let i = 0; i < 100; i++) {
-  var entryHandle = window.writeOnlyReport.get(
+  const entryHandle = window.writeOnlyReport.get(
     'report-for-domain-mod-' + i);
 
   entryHandle.append('ads-seen-on-all-domains', '1');
 
   entryHandle.expireAfter(msecUntilMidnight() + 5 * kMsecPerMinute);
 
-  if (i == thisDomainMod) {
+  if (i === thisDomainMod) {
     entryHandle.set('this-domain-is-' + thisDomain, '1');
     entryHandle.append('ads-seen-on-this-domain-mod', '1');
     entryHandle.reportAfter(msecUntilMidnight());
