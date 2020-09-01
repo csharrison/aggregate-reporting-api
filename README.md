@@ -9,7 +9,10 @@ sufficiently aggregated across browser users, using a server-side
 aggregation service.
 
 Note: We are still working on ideas for how to make aggregate
-thresholding work. This is just a strawman proposal.
+measurement work. This is just a strawman interface proposal. Most
+likely an API like this would be backed by something like the
+[Aggregation Service](https://github.com/WICG/conversion-measurement-api/blob/master/SERVICE.md)
+proposal.
 
 Motivation
 ==========
@@ -200,19 +203,11 @@ Reporting
 =========
 
 At specific time intervals, the browser will queue all entries in
-storage for reporting. First, they need to be proven to be sufficiently
-aggregated and not privacy revealing. To achieve this, we can query an
-aggregation service to be sure that the entire report — both the payload
-object and the origin it is reporting to — is sufficiently common. For
-options on how to build such an aggregation service, see some of the
-ideas in [aggregated conversion
-measurement](https://github.com/csharrison/conversion-measurement-api/blob/master/AGGREGATE.md).
-That service can gate whether or not the report is sufficiently
-aggregated across browser users.
-
-Once the report is proven to be sufficiently aggregated / thresholded,
-we can forward it on to the origin, possibly to a .well-known address.
-Integration with the Reporting API would be a plus.
+storage for reporting. The API itself must ensure somehow that the
+revealed data is private in some way. This could be achieved by
+integrating with the [Aggregation Service](https://github.com/WICG/conversion-measurement-api/blob/master/SERVICE.md)
+proposal in some way, by forming aggregation keys from the serialized
+reports.
 
 Restrictions for Performance and Privacy
 ========================================
