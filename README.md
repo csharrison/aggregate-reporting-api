@@ -59,7 +59,7 @@ entryHandle.append(“visits”, “1”);
 // Entries can be configured to report after a given time. After the
 // time has passed, entries are queued for reporting, become immutable,
 // and removed from the entry table. The UA will add additional
-// randomized delay on reporting for privacy reasons (up to a e.g. day).
+// randomized delay on reporting for privacy reasons (e.g. up to a day).
 // After a report is configured for reporting it cannot be altered by
 // subsequent calls to reportAfter.
 entryHandle.reportAfter(2 * kMsecPerDay);
